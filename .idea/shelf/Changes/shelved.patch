@@ -1,0 +1,153 @@
+Index: controllers/MoviesController.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php\n\nnamespace App\\Controllers;\n\nuse App\\Core\\App;\n\nclass MoviesController\n{\n    public function getMoviesApi()\n    {\n\n        $movies = App::get('database')->selectAll('movies');\n\n\n        echo json_encode($movies);\n    }\n\n    public function getGenresApi()\n    {\n\n        $genres = App::get('database')->selectAll('genres');\n\n        echo json_encode($genres);\n    }\n\n    public function getMovieId()\n    {\n\n        $genre_id= $_GET['genre_id'];\n        $params = [\n            'genre_id'=> $genre_id\n        ];\n\n         $movies =App::get('database')->selectAllByField(\"movies\",$params);\n\n         echo json_encode($movies);\n\n\n    }\n\n\n\n    public function showMovies()\n    {\n        check_auth();\n\n        $movies = App::get('database')->selectAll('movies');\n\n        return view('Allmovies',compact('movies'));\n    }\n\n    public function showOneMovie()\n    {\n        check_auth();\n\n        $id = $_GET['id'];\n        // contact db and get a user\n        $movie = App::get('database')->selectOne('movies',$id);\n\n        return view('movie',compact('movie'));\n    }\n\n\n    public function showEditMoviePage()\n    {\n        check_auth();\n\n        $id = $_GET['id'];\n        $movie = App::get('database')->selectOne('movies',$id);\n\n        return view('movieEdit',compact('movie'));\n    }\n\n    public function update()\n    {\n        check_auth();\n\n        $id = $_POST['id'];\n\n        $data = [\n            'id'=>$id,\n            'title'=>$_POST['title'],\n            'description'=>$_POST['description']\n        ];\n\n        $movies = App::get('database')->selectOneByField('movies', ['id'=>$id]);\n\n\n        App::get('database')->update('movies',$data);\n\n        return redirect('/movies');\n    }\n\n\n    public function deleteMovie()\n    {\n        check_auth();\n\n        $id = $_GET['id'];\n        $movie = App::get('database')->selectOneByField('movies',['id'=>$id]);\n\n\n        App::get('database')->delete('movies',$id);\n\n        redirect(\"/movies\");\n    }\n    public function insert()\n    {\n        check_auth();\n\n\n        App::get('database')->insert('movies',[\n                        'title'=>$_POST['title'],\n            'description'=>$_POST['description'],\n            'genre_id'=>$_POST['genre_id'],\n            'Url'=>$_POST[\"Url\"],\n            'runtime'=>$_POST[\"runtime\"]\n        ]);\n\n        return redirect('/movies');\n    }\n\n\n\n\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/controllers/MoviesController.php b/controllers/MoviesController.php
+--- a/controllers/MoviesController.php	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/controllers/MoviesController.php	(date 1682781253296)
+@@ -109,12 +109,16 @@
+         check_auth();
+ 
+ 
++
+         App::get('database')->insert('movies',[
+-                        'title'=>$_POST['title'],
++            'id'=>$_POST['id'],
++            'title'=>$_POST['title'],
++            'runtime'=>$_POST["runtime"],
+             'description'=>$_POST['description'],
+-            'genre_id'=>$_POST['genre_id'],
+             'Url'=>$_POST["Url"],
+-            'runtime'=>$_POST["runtime"]
++            'genre_id'=>$_POST['genre_id']
++
++
+         ]);
+ 
+         return redirect('/movies');
+Index: indexStyle.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>body {\n    background-color: cornflowerblue;\n    text-align: center;\n}\n\nh1 {\n    color: lightsalmon;\n}\np {\n    color: white;\n}\n\nform {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    background-color:darkblue;\n    width: 300px;\n    margin:100px auto;\n    border-radius: 10px;\n\n}\n\nform label {\n    color: lightsalmon;\n    font-size: 20px;\n    padding: 5px;\n\n}\n\nform input {\n    border: 0px;\n    border-radius: 10px;\n    padding: 8px;\n    margin-bottom: 10px;\n}\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/indexStyle.css b/indexStyle.css
+--- a/indexStyle.css	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/indexStyle.css	(date 1682781037094)
+@@ -35,4 +35,13 @@
+     margin-bottom: 10px;
+ }
+ 
++button {
++    border: none;
++    background-color: lightsalmon;
++    color: darkblue;
++    width: 100px;
++    height: 40px;
++    border-radius: 10px;
++}
++
+ 
+Index: userStyle.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\n\nbody {\n    background-color: cornflowerblue;\n}\n\nh1 {\n    color: lightsalmon;\n    text-align: center;\n}\n\n\n.users {\n    display: flex;\n    flex-direction: column ;\n    align-items: center;\n    color: white;\n}\n\n.users li {\n    font-size: 20px;\n    margin-bottom: 15px;\n}\n\n.users li a {\n    color: orangered;\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/userStyle.css b/userStyle.css
+--- a/userStyle.css	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/userStyle.css	(date 1682781396897)
+@@ -25,3 +25,7 @@
+ .users li a {
+     color: orangered;
+ }
++p{
++    color: white;
++    text-align: center;
++}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"0db62355-3b72-47eb-970e-279cc7bca326\" name=\"Changes\" comment=\"\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ComposerSettings\" doNotAsk=\"true\" synchronizationState=\"SYNCHRONIZE\">\r\n    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>\r\n    <execution />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"CSS File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$/../..\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"PhpWorkspaceProjectConfiguration\">\r\n    <include_path>\r\n      <path value=\"$PROJECT_DIR$/vendor/composer\" />\r\n    </include_path>\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2O5Y9xfFu3itGUBbvnf1E2yVnig\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\n    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,\n    &quot;last_opened_file_path&quot;: &quot;C:/nikola2023/sae_teaching_materials/php_y1_trimester2/10.04.2023framework&quot;,\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  },\n  &quot;keyToStringList&quot;: {\n    &quot;DatabaseDriversLRU&quot;: [\n      &quot;mysql&quot;\n    ]\n  }\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"$PROJECT_DIR$/images\" />\r\n      <recent name=\"$PROJECT_DIR$/views\" />\r\n      <recent name=\"C:\\nikola2023\\sae_teaching_materials\\php_y1_trimester2\\10.04.2023framework\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"0db62355-3b72-47eb-970e-279cc7bca326\" name=\"Changes\" comment=\"\" />\r\n      <created>1680851762243</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1680851762243</updated>\r\n      <workItem from=\"1680851763838\" duration=\"10255000\" />\r\n      <workItem from=\"1681111225544\" duration=\"9543000\" />\r\n      <workItem from=\"1681197617887\" duration=\"5412000\" />\r\n      <workItem from=\"1681204427346\" duration=\"2365000\" />\r\n      <workItem from=\"1681206869671\" duration=\"306000\" />\r\n      <workItem from=\"1681215728777\" duration=\"651000\" />\r\n      <workItem from=\"1681216384700\" duration=\"1569000\" />\r\n      <workItem from=\"1681283369892\" duration=\"26000\" />\r\n      <workItem from=\"1681291816738\" duration=\"917000\" />\r\n      <workItem from=\"1681305855845\" duration=\"5897000\" />\r\n      <workItem from=\"1681377643762\" duration=\"2927000\" />\r\n      <workItem from=\"1681574441382\" duration=\"5140000\" />\r\n      <workItem from=\"1681728083139\" duration=\"416000\" />\r\n      <workItem from=\"1681728509212\" duration=\"1301000\" />\r\n      <workItem from=\"1681729815207\" duration=\"2307000\" />\r\n      <workItem from=\"1681802273996\" duration=\"1097000\" />\r\n      <workItem from=\"1681805257281\" duration=\"153000\" />\r\n      <workItem from=\"1681805415012\" duration=\"87000\" />\r\n      <workItem from=\"1681805591884\" duration=\"2369000\" />\r\n      <workItem from=\"1681890382134\" duration=\"2080000\" />\r\n      <workItem from=\"1681892792360\" duration=\"990000\" />\r\n      <workItem from=\"1681894279376\" duration=\"196000\" />\r\n      <workItem from=\"1681899293377\" duration=\"2423000\" />\r\n      <workItem from=\"1682061722136\" duration=\"13511000\" />\r\n      <workItem from=\"1682452575644\" duration=\"1897000\" />\r\n      <workItem from=\"1682505126933\" duration=\"2675000\" />\r\n      <workItem from=\"1682507911078\" duration=\"4480000\" />\r\n      <workItem from=\"1682598318936\" duration=\"5186000\" />\r\n      <workItem from=\"1682677885156\" duration=\"1153000\" />\r\n      <workItem from=\"1682681238702\" duration=\"778000\" />\r\n      <workItem from=\"1682685073979\" duration=\"346000\" />\r\n      <workItem from=\"1682685422753\" duration=\"2847000\" />\r\n      <workItem from=\"1682769411193\" duration=\"696000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/.idea/workspace.xml	(date 1682781396961)
+@@ -4,7 +4,14 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="0db62355-3b72-47eb-970e-279cc7bca326" name="Changes" comment="" />
++    <list default="true" id="0db62355-3b72-47eb-970e-279cc7bca326" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/controllers/MoviesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/MoviesController.php" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/indexStyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/indexStyle.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/userStyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/userStyle.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/views/index.view.php" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.view.php" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -22,7 +29,7 @@
+     </option>
+   </component>
+   <component name="Git.Settings">
+-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
++    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -106,6 +113,8 @@
+       <workItem from="1682685073979" duration="346000" />
+       <workItem from="1682685422753" duration="2847000" />
+       <workItem from="1682769411193" duration="696000" />
++      <workItem from="1682775260343" duration="54000" />
++      <workItem from="1682775544453" duration="1643000" />
+     </task>
+     <servers />
+   </component>
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"VcsDirectoryMappings\">\r\n    <mapping directory=\"$PROJECT_DIR$/../..\" vcs=\"Git\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+--- a/.idea/vcs.xml	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/.idea/vcs.xml	(date 1682775313863)
+@@ -2,5 +2,6 @@
+ <project version="4">
+   <component name="VcsDirectoryMappings">
+     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: views/index.view.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?php require \"partials/head.php\" ?>\r\n    <link rel=\"stylesheet\" href=\"indexStyle.css\">\r\n<?php require \"partials/nav.php\" ?>\r\n\r\n    <h1>Add a movie</h1>\r\n    <form action=\"/movies/insert\" method=\"POST\" >\r\n        <label for=\"id\" hidden=\"\">id</label>\r\n        <input type=\"number\" id=\"id\" name=\"id\" hidden=\"\">\r\n        <label for=\"title\">Title:</label><br>\r\n        <input type=\"text\" id=\"title\" name=\"title\">\r\n\r\n        <label for=\"description\">Description:</label>\r\n        <input  type=\"text\" id=\"description\" name=\"description\"></input>\r\n\r\n        <label for=\"genre_id\">genre_id</label>\r\n        <input type=\"number\" name=\"genre_id\" id=\"genre_id\">\r\n\r\n        <label for=\"Url\">Url</label>\r\n        <input type=\"text\" id=\"Url\" name=\"Url\"></input>\r\n\r\n        <label for=\"runtime\">runtime</label>\r\n        <input type=\"text\" id=\"runtime\" name=\"runtime\">\r\n        <input type=\"submit\" value=\"Add Movie\">\r\n    </form>\r\n\r\n\r\n\r\n<?php require \"partials/footer.php\" ?>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/views/index.view.php b/views/index.view.php
+--- a/views/index.view.php	(revision 45b03bcb5ca1e19f0cb68de1640e45ec36b4c1af)
++++ b/views/index.view.php	(date 1682780952782)
+@@ -20,7 +20,7 @@
+ 
+         <label for="runtime">runtime</label>
+         <input type="text" id="runtime" name="runtime">
+-        <input type="submit" value="Add Movie">
++        <button type="submit" > submit </button>
+     </form>
+ 
+ 

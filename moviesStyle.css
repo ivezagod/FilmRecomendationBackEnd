@@ -1,0 +1,27 @@
+body {
+    background-color: cornflowerblue;
+    text-align: center;
+}
+h1 {
+    color: lightsalmon;
+}
+
+.movies {
+    list-style: none;
+}
+ .movies li {
+    border: 2px solid darkblue;
+    margin: 10px;
+    color: white;
+}
+
+.movies li a {
+    color: darksalmon;
+}
+p{
+    color: white;
+}
+
+
+
+

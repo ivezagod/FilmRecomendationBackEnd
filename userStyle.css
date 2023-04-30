@@ -1,0 +1,35 @@
+
+
+body {
+    background-color: cornflowerblue;
+}
+
+h1 {
+    color: lightsalmon;
+    text-align: center;
+}
+
+
+.users {
+    display: flex;
+    flex-direction: column ;
+    align-items: center;
+    color: white;
+}
+
+.users li {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.users li a {
+    color: orangered;
+}
+p{
+    color: white;
+    text-align: center;
+}
+p{
+    color: white;
+    : center;
+}

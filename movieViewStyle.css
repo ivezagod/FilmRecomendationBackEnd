@@ -1,0 +1,20 @@
+body {
+    background-color: cornflowerblue;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    color: lightsalmon;
+}
+
+p {
+    font-size: 20px;
+    color: whitesmoke;
+    text-align: center;
+}
+a {
+    color: lightsalmon;
+}
+
+
