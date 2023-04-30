@@ -8,5 +8,4 @@ than u need to run an sql script with backupdb.sql file.
 u need to login with admin@admin.com
 password: topsecrete.
 
-index.view has an inserr function but it doesn't work i don't know if it is my mestake or becouse of the php and the problems i have with it on mac.
-one day it works all normaly and than the next day it dosn't.
+index.view has an inserr function in wich if u want to add a new movie u can type anything in all fields exepct genre_id where u must type a number between 1 and 4.
